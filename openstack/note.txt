@@ -1,10 +1,6 @@
-如果tenant不存在
-	创建tenant
-		如果用户不存在
-			创建user，并制定password
-		如果用户存在，并且password不为空
-			更新password
-	将user加入tenant
-如果tenant存在
-	如果用户不存在
-		创建user，并制定password
+脚本用法：python createTenant.py tenantName userName password
+功能：
+1.当租户和用户不存在时，创建租户并添加默认安全组规则，创建用户添加到租户中
+2.当租户存在，用户不存在时，创建用户添加到租户中，确保icmp、22、80端口的安全组规则存在
+3.当用户存在，租户不存在时，创建租户并把用户添加到租户中，确保icmp、22、80端口的安全组规则存在
+4.当租户和用户都存在时，将用户添加到租户中，确保icmp、22、80端口的安全组规则存在（用户密码必须正确）
