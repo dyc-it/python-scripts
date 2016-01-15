@@ -30,43 +30,87 @@ keystone = ksclient.Client(auth_url=ADMIN_OS_AUTH_URL,
 # keystone.roles.add_user_role(user=user,role=role,tenant=tenant)
 
 
-neutron = neutronclient.Client(auth_url=NORMAL_OS_AUTH_URL,
+
+def initSecurityGroupRules(auth_url, username, password, tenant_name):
+    neutron = neutronclient.Client(auth_url=NORMAL_OS_AUTH_URL,
                            username=user_name,
                            password=password,
                            tenant_name=tenant_name)
 
+    group = neutron.list_security_groups(name="default")
+    groupID=group['security_groups'][0]['id']
 
+    for rule in group['security_groups'][0]['security_group_rules']:
+        # print rule
+        neutron.delete_security_group_rule(rule['id'])
 
+    in_80 = {
+                     "security_group_rule": {
+                            "direction": "ingress",
+                            "port_range_min": "80",
+                            "ethertype": "IPv4",
+                            "port_range_max": "80",
+                            "protocol": "tcp",
+                            "security_group_id": groupID
+                      }
+                 }
 
+    out_80 = {
+                     "security_group_rule": {
+                            "direction": "egress",
+                            "port_range_min": "80",
+                            "ethertype": "IPv4",
+                            "port_range_max": "80",
+                            "protocol": "tcp",
+                            "security_group_id": groupID
+                      }
+                 }
 
-group = neutron.list_security_groups(name="default")
-groupID=group['security_groups'][0]['id']
-# print groupID
-for rule in group['security_groups'][0]['security_group_rules']:
-    print rule
-    # neutron.delete_security_group_rule(rule['id'])
+    in_22 = {
+                     "security_group_rule": {
+                            "direction": "ingress",
+                            "port_range_min": "22",
+                            "ethertype": "IPv4",
+                            "port_range_max": "22",
+                            "protocol": "tcp",
+                            "security_group_id": groupID
+                      }
+                 }
 
-in_80 = {
-                 "security_group_rule": {
-                        "direction": "ingress",
-                        "port_range_min": "80",
-                        "ethertype": "IPv4",
-                        "port_range_max": "80",
-                        "protocol": "tcp",
-                        "security_group_id": groupID
-                  }
-             }
+    out_22 = {
+                     "security_group_rule": {
+                            "direction": "egress",
+                            "port_range_min": "22",
+                            "ethertype": "IPv4",
+                            "port_range_max": "22",
+                            "protocol": "tcp",
+                            "security_group_id": groupID
+                      }
+                 }
+    in_icmp = {
+                     "security_group_rule": {
+                            "direction": "ingress",
+                            "ethertype": "IPv4",
+                            "protocol": "icmp",
+                            "security_group_id": groupID
+                      }
+                 }
 
+    out_icmp = {
+                     "security_group_rule": {
+                            "direction": "egress",
+                            "ethertype": "IPv4",
+                            "protocol": "icmp",
+                            "security_group_id": groupID
+                      }
+                 }
 
-
-print body_value
-# in_80='{ "security_group_rule": { "direction": "ingress", "port_range_min": "80", "ethertype": "IPv4", "port_range_max": "80", "protocol": "tcp","security_group_id": "{{security-group-id}}"}}'
-# out_80='{ "security_group_rule": { "direction": "egress", "port_range_min": "80", "ethertype": "IPv4", "port_range_max": "80", "protocol": "tcp","security_group_id": "{{security-group-id}}"}}'
-
-
-neutron.create_security_group_rule(body_value)
-
-
+    neutron.create_security_group_rule(in_80)
+    neutron.create_security_group_rule(out_80)
+    neutron.create_security_group_rule(in_22)
+    neutron.create_security_group_rule(out_22)
+    neutron.create_security_group_rule(in_icmp)
+    neutron.create_security_group_rule(out_icmp)
 
 
 
