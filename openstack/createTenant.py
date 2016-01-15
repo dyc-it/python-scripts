@@ -1,39 +1,11 @@
+import sys
 import keystoneclient.v2_0.client as ksclient
 from neutronclient.v2_0 import client as neutronclient
 
-ADMIN_OS_AUTH_URL= 'http://haproxy:35357/v2.0'
-NORMAL_OS_AUTH_URL='http://haproxy:5000/v2.0'
-OS_USERNAME='admin'
-OS_PASSWORD='cdf9a6f98269180d64b3'
-OS_TENANT_NAME='admin'
-OS_REGION_NAME=''
-
-tenant_name="dyc"
-user_name="dyc"
-password="dyc"
-
-
-
-keystone = ksclient.Client(auth_url=ADMIN_OS_AUTH_URL,
-                           username=OS_USERNAME,
-                           password=OS_PASSWORD,
-                           tenant_name=OS_TENANT_NAME)
-
-
-
-# res=keystone.tenants.find(name=tenant_name)
-# print res
-
-# tenant=keystone.tenants.create(tenant_name=tenant_name)
-# user=keystone.users.create(name=user_name,password=password)
-# role=keystone.roles.find(name='_member_')
-# keystone.roles.add_user_role(user=user,role=role,tenant=tenant)
-
-
 
 def initSecurityGroupRules(auth_url, username, password, tenant_name):
-    neutron = neutronclient.Client(auth_url=NORMAL_OS_AUTH_URL,
-                           username=user_name,
+    neutron = neutronclient.Client(auth_url=auth_url,
+                           username=username,
                            password=password,
                            tenant_name=tenant_name)
 
@@ -111,6 +83,36 @@ def initSecurityGroupRules(auth_url, username, password, tenant_name):
     neutron.create_security_group_rule(out_22)
     neutron.create_security_group_rule(in_icmp)
     neutron.create_security_group_rule(out_icmp)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print 'usage: python createTenant.py tenantName userName password'
+        exit(1)
+    tenant_name=sys.argv[1]
+    user_name=sys.argv[2]
+    password=sys.argv[3]
+
+    ADMIN_OS_AUTH_URL= 'http://haproxy:35357/v2.0'
+    NORMAL_OS_AUTH_URL='http://haproxy:5000/v2.0'
+    OS_USERNAME='admin'
+    OS_PASSWORD='cdf9a6f98269180d64b3'
+    OS_TENANT_NAME='admin'
+    OS_REGION_NAME=''
+
+    keystone = ksclient.Client(auth_url=ADMIN_OS_AUTH_URL,
+                               username=OS_USERNAME,
+                               password=OS_PASSWORD,
+                               tenant_name=OS_TENANT_NAME)
+
+    res=keystone.tenants.find(name=tenant_name)
+    print res
+
+    tenant=keystone.tenants.create(tenant_name=tenant_name)
+    user=keystone.users.create(name=user_name,password=password)
+    role=keystone.roles.find(name='_member_')
+    keystone.roles.add_user_role(user=user,role=role,tenant=tenant)
+
 
 
 
