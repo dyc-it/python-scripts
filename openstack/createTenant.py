@@ -102,6 +102,28 @@ def initSecurityGroupRules(auth_url, username, password, tenant_name, isClearing
                             "security_group_id": groupID
                       }
                  }
+    in_53 = {
+                     "security_group_rule": {
+                            "direction": "ingress",
+                            "port_range_min": "53",
+                            "ethertype": "IPv4",
+                            "port_range_max": "53",
+                            "protocol": "udp",
+                            "security_group_id": groupID
+                      }
+                 }
+
+    out_53 = {
+                     "security_group_rule": {
+                            "direction": "egress",
+                            "port_range_min": "53",
+                            "ethertype": "IPv4",
+                            "port_range_max": "53",
+                            "protocol": "udp",
+                            "security_group_id": groupID
+                      }
+                 }
+
     in_icmp = {
                      "security_group_rule": {
                             "direction": "ingress",
@@ -156,6 +178,16 @@ def initSecurityGroupRules(auth_url, username, password, tenant_name, isClearing
         pass
     try:
         neutron.create_security_group_rule(out_8080)
+    except Exception:
+        pass
+
+    print 'add ingress and egress of port 53'
+    try:
+        neutron.create_security_group_rule(in_53)
+    except Exception:
+        pass
+    try:
+        neutron.create_security_group_rule(out_53)
     except Exception:
         pass
 
