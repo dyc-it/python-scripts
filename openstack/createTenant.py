@@ -60,6 +60,48 @@ def initSecurityGroupRules(auth_url, username, password, tenant_name, isClearing
                             "security_group_id": groupID
                       }
                  }
+    in_3389 = {
+                     "security_group_rule": {
+                            "direction": "ingress",
+                            "port_range_min": "3389",
+                            "ethertype": "IPv4",
+                            "port_range_max": "3389",
+                            "protocol": "tcp",
+                            "security_group_id": groupID
+                      }
+                 }
+
+    out_3389 = {
+                     "security_group_rule": {
+                            "direction": "egress",
+                            "port_range_min": "3389",
+                            "ethertype": "IPv4",
+                            "port_range_max": "3389",
+                            "protocol": "tcp",
+                            "security_group_id": groupID
+                      }
+                 }
+    in_8080 = {
+                     "security_group_rule": {
+                            "direction": "ingress",
+                            "port_range_min": "8080",
+                            "ethertype": "IPv4",
+                            "port_range_max": "8080",
+                            "protocol": "tcp",
+                            "security_group_id": groupID
+                      }
+                 }
+
+    out_8080 = {
+                     "security_group_rule": {
+                            "direction": "egress",
+                            "port_range_min": "8080",
+                            "ethertype": "IPv4",
+                            "port_range_max": "8080",
+                            "protocol": "tcp",
+                            "security_group_id": groupID
+                      }
+                 }
     in_icmp = {
                      "security_group_rule": {
                             "direction": "ingress",
@@ -97,6 +139,26 @@ def initSecurityGroupRules(auth_url, username, password, tenant_name, isClearing
     except Exception:
         pass
 
+    print 'add ingress and egress of port 3389'
+    try:
+        neutron.create_security_group_rule(in_3389)
+    except Exception:
+        pass
+    try:
+        neutron.create_security_group_rule(out_3389)
+    except Exception:
+        pass
+
+    print 'add ingress and egress of port 8080'
+    try:
+        neutron.create_security_group_rule(in_8080)
+    except Exception:
+        pass
+    try:
+        neutron.create_security_group_rule(out_8080)
+    except Exception:
+        pass
+
     print 'add ingress and egress of icmp protocol'
     try:
         neutron.create_security_group_rule(in_icmp)
@@ -110,7 +172,7 @@ def initSecurityGroupRules(auth_url, username, password, tenant_name, isClearing
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
-        print len(sys.argv)
+        # print len(sys.argv)
         print 'usage: python createTenant.py tenantName userName password'
         exit(1)
     tenant_name=sys.argv[1]
