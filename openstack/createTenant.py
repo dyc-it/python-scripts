@@ -12,194 +12,56 @@ def initSecurityGroupRules(auth_url, username, password, tenant_name, isClearing
     group = neutron.list_security_groups(name="default")
     groupID=group['security_groups'][0]['id']
 
+    # if the tenant is created by this script, clear default rules
     if isClearingSecurintGroupRules==True:
         for rule in group['security_groups'][0]['security_group_rules']:
             #print rule
             neutron.delete_security_group_rule(rule['id'])
 
-    in_80 = {
-                     "security_group_rule": {
-                            "direction": "ingress",
-                            "port_range_min": "80",
-                            "ethertype": "IPv4",
-                            "port_range_max": "80",
-                            "protocol": "tcp",
-                            "security_group_id": groupID
-                      }
-                 }
+    # define rules
+    in_tcp_80 = {"security_group_rule": {"direction": "ingress","port_range_min": "80","ethertype": "IPv4",
+                            "port_range_max": "80","protocol": "tcp","security_group_id": groupID}}
 
-    out_80 = {
-                     "security_group_rule": {
-                            "direction": "egress",
-                            "port_range_min": "80",
-                            "ethertype": "IPv4",
-                            "port_range_max": "80",
-                            "protocol": "tcp",
-                            "security_group_id": groupID
-                      }
-                 }
+    out_tcp_80 = {"security_group_rule": {"direction": "egress","port_range_min": "80","ethertype": "IPv4",
+                            "port_range_max": "80","protocol": "tcp","security_group_id": groupID}}
 
-    in_22 = {
-                     "security_group_rule": {
-                            "direction": "ingress",
-                            "port_range_min": "22",
-                            "ethertype": "IPv4",
-                            "port_range_max": "22",
-                            "protocol": "tcp",
-                            "security_group_id": groupID
-                      }
-                 }
+    in_tcp_22 = {"security_group_rule": {"direction": "ingress","port_range_min": "22","ethertype": "IPv4",
+                            "port_range_max": "22","protocol": "tcp","security_group_id": groupID}}
 
-    out_22 = {
-                     "security_group_rule": {
-                            "direction": "egress",
-                            "port_range_min": "22",
-                            "ethertype": "IPv4",
-                            "port_range_max": "22",
-                            "protocol": "tcp",
-                            "security_group_id": groupID
-                      }
-                 }
-    in_3389 = {
-                     "security_group_rule": {
-                            "direction": "ingress",
-                            "port_range_min": "3389",
-                            "ethertype": "IPv4",
-                            "port_range_max": "3389",
-                            "protocol": "tcp",
-                            "security_group_id": groupID
-                      }
-                 }
+    out_tcp_22 = {"security_group_rule": {"direction": "egress","port_range_min": "22","ethertype": "IPv4",
+                            "port_range_max": "22","protocol": "tcp","security_group_id": groupID}}
+    in_tcp_3389 = {"security_group_rule": {"direction": "ingress","port_range_min": "3389","ethertype": "IPv4",
+                            "port_range_max": "3389","protocol": "tcp","security_group_id": groupID}}
 
-    out_3389 = {
-                     "security_group_rule": {
-                            "direction": "egress",
-                            "port_range_min": "3389",
-                            "ethertype": "IPv4",
-                            "port_range_max": "3389",
-                            "protocol": "tcp",
-                            "security_group_id": groupID
-                      }
-                 }
-    in_8080 = {
-                     "security_group_rule": {
-                            "direction": "ingress",
-                            "port_range_min": "8080",
-                            "ethertype": "IPv4",
-                            "port_range_max": "8080",
-                            "protocol": "tcp",
-                            "security_group_id": groupID
-                      }
-                 }
+    out_tcp_3389 = {"security_group_rule": {"direction": "egress","port_range_min": "3389","ethertype": "IPv4",
+                            "port_range_max": "3389","protocol": "tcp","security_group_id": groupID}}
+    in_tcp_8080 = {"security_group_rule": {"direction": "ingress","port_range_min": "8080","ethertype": "IPv4",
+                            "port_range_max": "8080","protocol": "tcp","security_group_id": groupID}}
 
-    out_8080 = {
-                     "security_group_rule": {
-                            "direction": "egress",
-                            "port_range_min": "8080",
-                            "ethertype": "IPv4",
-                            "port_range_max": "8080",
-                            "protocol": "tcp",
-                            "security_group_id": groupID
-                      }
-                 }
-    in_53 = {
-                     "security_group_rule": {
-                            "direction": "ingress",
-                            "port_range_min": "53",
-                            "ethertype": "IPv4",
-                            "port_range_max": "53",
-                            "protocol": "udp",
-                            "security_group_id": groupID
-                      }
-                 }
+    out_tcp_8080 = {"security_group_rule": {"direction": "egress","port_range_min": "8080","ethertype": "IPv4",
+                            "port_range_max": "8080","protocol": "tcp","security_group_id": groupID}}
+    in_udp_53 = {"security_group_rule": {"direction": "ingress","port_range_min": "53","ethertype": "IPv4",
+                            "port_range_max": "53","protocol": "udp","security_group_id": groupID}}
 
-    out_53 = {
-                     "security_group_rule": {
-                            "direction": "egress",
-                            "port_range_min": "53",
-                            "ethertype": "IPv4",
-                            "port_range_max": "53",
-                            "protocol": "udp",
-                            "security_group_id": groupID
-                      }
-                 }
+    out_udp_53 = {"security_group_rule": {"direction": "egress","port_range_min": "53","ethertype": "IPv4",
+                            "port_range_max": "53","protocol": "udp","security_group_id": groupID}}
 
-    in_icmp = {
-                     "security_group_rule": {
-                            "direction": "ingress",
-                            "ethertype": "IPv4",
-                            "protocol": "icmp",
-                            "security_group_id": groupID
-                      }
-                 }
+    in_icmp = {"security_group_rule": {"direction": "ingress","ethertype": "IPv4",
+                            "protocol": "icmp","security_group_id": groupID}}
 
-    out_icmp = {
-                     "security_group_rule": {
-                            "direction": "egress",
-                            "ethertype": "IPv4",
-                            "protocol": "icmp",
-                            "security_group_id": groupID
-                      }
-                 }
-    print 'add ingress and egress of port 80'
-    try:
-        neutron.create_security_group_rule(in_80)
-    except Exception:
-        pass
-    try:
-        neutron.create_security_group_rule(out_80)
-    except Exception:
-        pass
+    out_icmp = {"security_group_rule": {"direction": "egress","ethertype": "IPv4","protocol": "icmp",
+                            "security_group_id": groupID}}
 
-    print 'add ingress and egress of port 22'
-    try:
-        neutron.create_security_group_rule(in_22)
-    except Exception:
-        pass
-    try:
-        neutron.create_security_group_rule(out_22)
-    except Exception:
-        pass
+    rules = [in_tcp_80, out_tcp_80, in_tcp_22, out_tcp_22, in_tcp_3389, out_tcp_3389,
+             in_tcp_8080, out_tcp_8080, in_udp_53, out_udp_53, in_icmp, out_icmp]
 
-    print 'add ingress and egress of port 3389'
-    try:
-        neutron.create_security_group_rule(in_3389)
-    except Exception:
-        pass
-    try:
-        neutron.create_security_group_rule(out_3389)
-    except Exception:
-        pass
+    print 'add rules in default security group'
+    for rule in rules:
+        try:
+            neutron.create_security_group_rule(rule)
+        except Exception:
+            pass
 
-    print 'add ingress and egress of port 8080'
-    try:
-        neutron.create_security_group_rule(in_8080)
-    except Exception:
-        pass
-    try:
-        neutron.create_security_group_rule(out_8080)
-    except Exception:
-        pass
-
-    print 'add ingress and egress of port 53'
-    try:
-        neutron.create_security_group_rule(in_53)
-    except Exception:
-        pass
-    try:
-        neutron.create_security_group_rule(out_53)
-    except Exception:
-        pass
-
-    print 'add ingress and egress of icmp protocol'
-    try:
-        neutron.create_security_group_rule(in_icmp)
-    except Exception:
-        pass
-    try:
-        neutron.create_security_group_rule(out_icmp)
-    except Exception:
-        pass
 
 
 if __name__ == '__main__':
@@ -210,7 +72,6 @@ if __name__ == '__main__':
     tenant_name=sys.argv[1]
     user_name=sys.argv[2]
     password=sys.argv[3]
-
 
     ADMIN_OS_AUTH_URL= 'http://haproxy:35357/v2.0'
     NORMAL_OS_AUTH_URL='http://haproxy:5000/v2.0'
@@ -278,10 +139,3 @@ if __name__ == '__main__':
     initSecurityGroupRules(auth_url=NORMAL_OS_AUTH_URL, username=user_name,
                            password=password, tenant_name=tenant_name,
                            isClearingSecurintGroupRules=isClearingSecurintGroupRules)
-
-
-
-
-
-
-
