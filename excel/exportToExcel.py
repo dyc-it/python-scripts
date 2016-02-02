@@ -11,7 +11,7 @@ def writeToExcel():
 def convertTxtToMap(resultFile):
     file = open(resultFile)
 
-    resultMap = {}
+    resultMap = dict()
     lines = file.readlines(100000)
 
     for i in xrange(0, len(lines)-1):
@@ -26,8 +26,9 @@ def convertTxtToMap(resultFile):
                     str = secondLine.split(',', 4)
                     rate = str[1].replace('bw=','').replace('KB/s','')
                     iops = str[2].replace('iops=','').strip()
-                    resultMap['4k']['0'] = rate
-                    resultMap['4k']
+                    resultMap['4k'][0] = rate
+                    resultMap['4k'][4] = iops
+                    print resultMap
 
 
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     for i in xrange(1, len(sys.argv)):
         print 'processing ' + sys.argv[i]
         resultMap = convertTxtToMap(sys.argv[i])
-        print resultMap['4k']
+        print resultMap
 
 
 
