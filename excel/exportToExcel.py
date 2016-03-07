@@ -1,6 +1,10 @@
 import sys
 import xlwt
 
+resultMap = dict()
+
+
+
 def writeToExcel():
     workbook = xlwt.Workbook(encoding = 'ascii')
     worksheet = workbook.add_sheet('My Worksheet')
@@ -11,7 +15,6 @@ def writeToExcel():
 def convertTxtToMap(resultFile):
     file = open(resultFile)
 
-    resultMap = dict()
     lines = file.readlines(100000)
 
     for i in xrange(0, len(lines)-1):
